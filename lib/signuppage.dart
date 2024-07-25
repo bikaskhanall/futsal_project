@@ -9,12 +9,13 @@ class SignUppage extends StatefulWidget {
   State<SignUppage> createState() => _SignUppageState();
 }
 
-class _SignUppageState extends State<SignUppage> { 
+class _SignUppageState extends State<SignUppage> {
   final ApiService _apiService = ApiService();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -24,16 +25,19 @@ class _SignUppageState extends State<SignUppage> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_passwordController.text == _confirmPasswordController.text) {
-      _apiService.postData(
+      final response = await _apiService.postData(
         _nameController.text,
         _emailController.text,
         _passwordController.text,
       );
+      final statusMessage = response['status_message'] ?? 'Unknown error';
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Verificationpage()),
+        MaterialPageRoute(
+          builder: (context) => Verificationpage(statusMessage: statusMessage),
+        ),
       );
     } else {
       print('Passwords do not match');
@@ -51,13 +55,12 @@ class _SignUppageState extends State<SignUppage> {
               height: 800,
               width: MediaQuery.of(context).size.width,
               child: Image.asset(
-                'assets/images/signuppageimage.jpg', 
+                'assets/images/signuppageimage.jpg',
                 fit: BoxFit.cover,
               ),
             ),
-           
             Padding(
-              padding: const EdgeInsets.only(left: 40, top: 350, right: 40), 
+              padding: const EdgeInsets.only(left: 40, top: 350, right: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,7 +71,7 @@ class _SignUppageState extends State<SignUppage> {
                         fontSize: 32,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.none, 
+                        decoration: TextDecoration.none,
                       ),
                     ),
                   ),
@@ -79,7 +82,7 @@ class _SignUppageState extends State<SignUppage> {
                       fillColor: const Color(0xFFDDDDDD),
                       filled: true,
                       labelText: 'Name',
-                      labelStyle: const TextStyle(color: Colors.black), 
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -88,12 +91,12 @@ class _SignUppageState extends State<SignUppage> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _emailController,
-                    style: const TextStyle(color: Colors.grey), 
+                    style: const TextStyle(color: Colors.grey),
                     decoration: InputDecoration(
                       fillColor: const Color(0xFFDDDDDD),
                       filled: true,
                       labelText: 'Email',
-                      labelStyle: const TextStyle(color: Colors.black), 
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -102,13 +105,13 @@ class _SignUppageState extends State<SignUppage> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _passwordController,
-                    style: const TextStyle(color: Colors.grey), 
+                    style: const TextStyle(color: Colors.grey),
                     obscureText: true,
                     decoration: InputDecoration(
                       fillColor: const Color(0xFFDDDDDD),
                       filled: true,
                       labelText: 'Password',
-                      labelStyle: const TextStyle(color: Colors.black), 
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -117,27 +120,26 @@ class _SignUppageState extends State<SignUppage> {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: _confirmPasswordController,
-                    style: const TextStyle(color: Colors.grey), 
+                    style: const TextStyle(color: Colors.grey),
                     obscureText: true,
                     decoration: InputDecoration(
                       fillColor: const Color(0xFFDDDDDD),
                       filled: true,
                       labelText: 'Confirm Password',
-                      labelStyle: const TextStyle(color: Colors.black), 
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(22),
                       ),
                     ),
                   ),
-                  
                   const SizedBox(height: 20),
                   Center(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(const Color(0xFF2C8B2C)),
-                          shape: WidgetStateProperty.all(
+                          backgroundColor: MaterialStateProperty.all(const Color(0xFF2C8B2C)),
+                          shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(24),
                             ),
@@ -151,7 +153,7 @@ class _SignUppageState extends State<SignUppage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 25,),
+                  const SizedBox(height: 25),
                   Center(
                     child: GestureDetector(
                       child: const Text(
